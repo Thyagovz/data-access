@@ -46,6 +46,7 @@ appsettings.Development.json
 appsettings.Local.json
 *.env
 *.local
+Properties/launchSettings.json
 
 ## --- OS / Sistema Operacional ---
 .DS_Store

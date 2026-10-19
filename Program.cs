@@ -9,18 +9,20 @@ namespace DataAccess;
 
 class Program
 {
+    private static readonly string? _connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
     static void Main(string[] args)
     {
-        const string connectionString = "Server=localhost,1433;Database=balta;User ID=sa;Password=1q2w3e4r@#$;TrustServerCertificate=True;";
-
-        using (var connection = new SqlConnection(connectionString))
+        using (var connection = new SqlConnection(_connectionString))
         {
+            // Abre a conexão uma vez para ser usada em todos os métodos
+            connection.Open();
+
             // CreateCategory(connection);
             // CreateManyCategory(connection);
             // UpdateCategory(connection);
             // DeleteCategory(connection);
             // ListCategories(connection);
-            // GetCategory(connection);
+            GetCategory(connection);
             // ExecuteProcedure(connection);
             // ExecuteReadProcedure(connection);
             // ExecuteScalar(connection);
@@ -30,7 +32,7 @@ class Program
             // QueryMultiple(connection);
             // SelectIn(connection);
             // Like(connection, "api");
-            Transaction(connection);
+            // Transaction(connection);
         }
     }
 
@@ -409,7 +411,6 @@ class Program
                 @Description,
                 @Featured)";
 
-            connection.Open();
             using (var transaction = connection.BeginTransaction())
             {
                 var rows = connection.Execute(insertSql, new
