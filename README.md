@@ -82,6 +82,47 @@ Os scripts SQL de apoio estão em [`exec.sql`](./exec.sql) e [`procedure.sql`](.
 
 O projeto serve como laboratório compacto para fundamentos de persistência com .NET e SQL Server. As implementações podem evoluir para separar configuração, conexão, repositórios e testes automatizados à medida que o escopo crescer.
 
+### Atenção sobre credenciais
+
+> **Observação de estudo:** a credencial que esteve exposta em uma versão anterior foi deixada
+> propositalmente para fins didáticos. Ela não deve ser reutilizada, compartilhada ou tratada como
+> um padrão aceitável para desenvolvimento profissional. O valor não é reproduzido neste documento.
+
+Mesmo em um projeto de estudos, um desenvolvedor não deve versionar senhas, tokens ou strings de
+conexão com credenciais reais. A referência brasileira principal é a **Lei Geral de Proteção de
+Dados (LGPD), Lei nº 13.709/2018**, especialmente:
+
+- **Art. 46:** exige medidas de segurança, técnicas e administrativas, aptas a proteger os dados
+  pessoais contra acesso não autorizado e situações acidentais ou ilícitas;
+- **Art. 47:** mantém o dever de garantir a segurança da informação mesmo após o seu tratamento;
+- **Arts. 48 e 49:** podem trazer consequências adicionais quando houver incidente de segurança e
+  falhas na estrutura de tratamento.
+
+A aplicação concreta depende do contexto e não substitui orientação jurídica. Além da LGPD, devem
+ser observadas políticas da organização, contratos e regras de segurança aplicáveis. Se uma
+credencial real for publicada, ela deve ser revogada ou substituída imediatamente, mesmo que o
+commit seja apagado depois.
+
+### Melhorias registradas no último commit
+
+No commit `371f299` (`Replace hardcoded credentials with environment variables`), foram aplicadas
+as seguintes boas práticas:
+
+- remoção da string de conexão com credencial diretamente do `Program.cs`;
+- leitura da configuração pela variável de ambiente `DB_CONNECTION_STRING`;
+- inclusão de `Properties/launchSettings.json` no `.gitignore`, evitando o versionamento acidental
+  de configurações locais;
+- abertura da conexão uma única vez no fluxo principal, permitindo seu uso pelos cenários
+  selecionados;
+- manutenção da consulta parametrizada no cenário ativo, sem interpolar valores diretamente no
+  SQL;
+- desativação da chamada de transação enquanto o cenário de leitura individual está selecionado.
+
+Como próximos passos, a aplicação deve validar explicitamente se `DB_CONNECTION_STRING` foi
+configurada, evitar registrar a string em logs e usar um gerenciador de segredos ou um mecanismo
+equivalente em ambientes compartilhados e de produção. Variáveis de ambiente reduzem o risco de
+versionamento, mas não substituem rotação de credenciais, menor privilégio e controle de acesso.
+
 ## Contato
 
 Consulte o perfil do autor no [Thyagovz](https://github.com/Thyagovz) para acompanhar a evolução do projeto ou abrir uma discussão.
